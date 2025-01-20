@@ -3,7 +3,7 @@ import type { MODEL } from "../llm/types";
 import { LLM } from "../llm/llm";
 import { Gpt4o } from "../llm/gpt-4o";
 import calculatorTool from "../tools/example/calculator";
-import type {  ToolDefinition, ToolHandler, ToolResult } from "../tools/types";
+import type { ToolDefinition, ToolHandler, ToolResult } from "../tools/types";
 import type { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export class CalculatorAgent extends BaseAgent {
@@ -37,29 +37,35 @@ When asked to perform calculations:
             systemMessage: this.getSystemPrompt()
         });
     }
-} 
+}
+
 
 export const calculatorAgentTool: ToolHandler<AsyncGenerator<ChatCompletionMessageParam, any, unknown>> = {
     definition: {
-		type: 'function',
-		function: {
-			name: 'calculator_agent',
-			description: 'A calculator agent that can perform mathematical operations',
-			parameters: {
-				type: 'object',
-				properties: {
-					query: {
-						type: 'string',
-						description: 'The query to be executed'
-					}
-				},
-				required: ['query']
-			}
-		}
-	},
-    execute: (params: Record<string, any>) => {
-		console.log("execute");
+        type: 'function',
+        function: {
+            name: 'calculator_agent',
+            description: 'A calculator agent that can perform mathematical operations',
+            parameters: {
+                type: 'object',
+                properties: {
+                    query: {
+                        type: 'string',
+                        description: 'The query to be executed'
+                    }
+                },
+                required: ['query']
+            }
+        }
+    },
+    execute: async function* (params: Record<string, any>): AsyncGenerator<ChatCompletionMessageParam, any, unknown> {
+        console.log("execute");
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const agent = new CalculatorAgent();
-        return agent.streamChat(params.query);
+        const stream = agent.streamChat(params.query);
+
+        for await (const message of stream) {
+            yield message;
+        }
     }
 };

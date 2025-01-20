@@ -1,6 +1,6 @@
 import type { ToolHandler, ToolResult } from '../types';
 
-const calculatorTool: ToolHandler = {
+const calculatorTool: ToolHandler<any> = {
     definition: {
         type: 'function',
         function: {
@@ -30,6 +30,7 @@ const calculatorTool: ToolHandler = {
 
     async execute(params: Record<string, any>): Promise<ToolResult> {
         const { operation, a, b } = params;
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         try {
             let result: number;

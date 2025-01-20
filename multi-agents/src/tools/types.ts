@@ -30,15 +30,6 @@ export interface ToolHandler<TResult> {
     execute: (params: Record<string, any>) => TResult;
 }
 
-// export interface ToolHandler {
-//     definition: ToolDefinition;
-//     execute: (params: Record<string, any>) => Promise<ToolResult>;
-// }
-
-// export interface AgentToolHandler {
-//     definition: ToolDefinition;
-//     execute(params: Record<string, any>): AsyncGenerator<ChatCompletionMessageParam, any, unknown>;
-// }
 
 export type ToolRegistry = Map<string, ToolHandler<any>>;
 
